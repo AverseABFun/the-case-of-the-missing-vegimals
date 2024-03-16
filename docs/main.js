@@ -8,6 +8,7 @@ function docReady(fn) {
         document.addEventListener("DOMContentLoaded", fn);
     }
 }
+const hints = await fetch("./hints.json").then(res => res.json());
 
 docReady(function () {
     var resultContainer = document.getElementById('qr-reader-results');
@@ -54,6 +55,9 @@ docReady(function () {
             const newEl = document.createElement("li");
             newEl.innerHTML = `<b>Vegimal #${vegimalNumber}: ${vegimal}</b>`;
             document.getElementById("found-vegimals").appendChild(newEl);
+            const newHint = document.createElement("li");
+            newHint.innerHTML = `<b>#${vegimalNumber+1}: ${hints[(vegimalNumber+1).toString()]}</b>`
+            document.getElementById("hints")
             } catch (e) {
                 console.error(e);
             }
