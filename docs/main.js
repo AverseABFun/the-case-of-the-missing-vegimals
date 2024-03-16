@@ -19,12 +19,26 @@ docReady(function () {
             resultContainer.innerText += decodedText;
             // Handle on success condition with the decoded message.
             console.log(`Scan result ${decodedText}`, decodedResult);
-            if (!decodedText.split("-")[0] == "QR" || !decodedText.split("-")[1] == "GAME" || !decodedText.split("-")[2].split("=")[0] == "TCOTMV") {
+            // QR-GAME:TCOTMV=VHVuaXAtMDE=
+            if (!decodedText.split(":")[0] == "QR-GAME") {
+                console.log("Not a QR-GAME code");
                 return;
             }
-            const qrData = atob(decodedText.split("-")[2].split("=")[1]).split("-");
+            if (!decodedText.split(":")[1].split("=")[0] == "TCOTMV") {
+                console.log("Not a TCOTMV code");
+                return;
+            }
+            try {
+            const qrData = atob(decodedText.split(":")[1].split("=")[1]).split("-");
+            console.log(qrData);
             const vegimal = qrData[0];
             const vegimalNumber = qrData[1];
+            if (!localStorage.getItem("vegimals")) {
+                localStorage.setItem("vegimals", "");
+            }
+            if (!localStorage.getItem("vegimalNums")) {
+                localStorage.setItem("vegimalNums", "");
+            }
             if (localStorage.getItem("vegimals").split(",").includes(vegimal) || localStorage.getItem("vegimalNums").split(",").includes(vegimalNumber)) {
                 alert("You already found this Vegimal!")
                 return;
@@ -38,11 +52,24 @@ docReady(function () {
                 localStorage.setItem("vegimalNums", localStorage.getItem("vegimalNums").replace(",", ""));
             }
             const newEl = document.createElement("li");
-            newEl.innerHTML = `<b>Vegimal #${vegimalNumber}: ${vegimal}`;
+            newEl.innerHTML = `<b>Vegimal #${vegimalNumber}: ${vegimal}</b>`;
             document.getElementById("found-vegimals").appendChild(newEl);
+            } catch (e) {
+                console.error(e);
+            }
         }
     }
-
+    if (!localStorage.getItem("vegimals")) {
+        localStorage.setItem("vegimals", "");
+    }
+    if (!localStorage.getItem("vegimalNums")) {
+        localStorage.setItem("vegimalNums", "");
+    }
+    for (var i = 0; i < localStorage.getItem("vegimals").split(",").length; i++) {
+        const newEl = document.createElement("li");
+        newEl.innerHTML = `<b>Vegimal #${localStorage.getItem("vegimalNums").split(",")[i]}: ${localStorage.getItem("vegimals").split(",")[i]}</b>`;
+        document.getElementById("found-vegimals").appendChild(newEl);
+    }
     var html5QrcodeScanner = new Html5QrcodeScanner(
         "qr-reader", { fps: 10, qrbox: 250 });
     html5QrcodeScanner.render(onScanSuccess);
