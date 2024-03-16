@@ -56,8 +56,8 @@ docReady(function () {
             newEl.innerHTML = `<b>Vegimal #${vegimalNumber}: ${vegimal}</b>`;
             document.getElementById("found-vegimals").appendChild(newEl);
             const newHint = document.createElement("li");
-            newHint.innerHTML = `<b>#${vegimalNumber+1}: ${hints[(vegimalNumber+1).toString()]}</b>`
-            document.getElementById("hints")
+            newHint.innerHTML = `<b>#${parseInt(vegimalNumber)+1}: ${hints[(parseInt(vegimalNumber)+1).toString()]}</b>`
+            document.getElementById("hints").appendChild(newHint);
             } catch (e) {
                 console.error(e);
             }
@@ -73,6 +73,9 @@ docReady(function () {
         const newEl = document.createElement("li");
         newEl.innerHTML = `<b>Vegimal #${localStorage.getItem("vegimalNums").split(",")[i]}: ${localStorage.getItem("vegimals").split(",")[i]}</b>`;
         document.getElementById("found-vegimals").appendChild(newEl);
+        const newHint = document.createElement("li");
+        newHint.innerHTML = `<b>#${parseInt(localStorage.getItem("vegimalNums").split(",")[i])+1}: ${hints[(parseInt(localStorage.getItem("vegimalNums").split(",")[i])+1).toString()]}</b>`
+        document.getElementById("hints").appendChild(newHint);
     }
     var html5QrcodeScanner = new Html5QrcodeScanner(
         "qr-reader", { fps: 10, qrbox: 250 });
